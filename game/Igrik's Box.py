@@ -19,7 +19,10 @@ stone_texture = safe_load_texture("stone_block.png")
 brick_texture = safe_load_texture("brick_block.png")
 dirt_texture = safe_load_texture("dirt_block.jpg")
 wood_texture = safe_load_texture("wood_block.jpg")
-textures = [grass_texture, stone_texture, brick_texture, dirt_texture, wood_texture]
+bedrock_texture = safe_load_texture("bedrock_block.jpg")
+leaves_texture = safe_load_texture("leaves_block.jpg")
+
+textures = [grass_texture, stone_texture, brick_texture, dirt_texture, wood_texture, bedrock_texture, leaves_texture]
 current_slot = 0
 
 Sky(texture=skybox_image)
@@ -120,12 +123,27 @@ class Voxel(Button):
         self.block_id = block_id
 
 # --- Flat world ---
+from random import randint  # make sure randint is imported at the top
+
+for z in range(20):
+    for x in range(20):
+        if randint(1, 20) == 1:  # 1 in 20 chance for a tree
+            # tree trunk
+            Voxel(position=(x,1,z), texture=wood_texture, block_id=4)
+            Voxel(position=(x,2,z), texture=wood_texture, block_id=4)
+
+            # leaves around the top
+            for dx in range(-1, 2):
+                for dz in range(-1, 2):
+                    Voxel(position=(x+dx, 3, z+dz), texture=leaves_texture, block_id=6)
+            Voxel(position=(x,4,z), texture=leaves_texture, block_id=6)
+            
 for z in range(20):
     for x in range(20):
         Voxel(position=(x,0,z), texture=grass_texture, block_id=0)
 for z in range(20):
     for x in range(20):
-        Voxel(position=(x,-1,z), texture=wood_texture, block_id=4)
+        Voxel(position=(x,-1,z), texture=dirt_texture, block_id=3)
 for z in range(20):
     for x in range(20):
         Voxel(position=(x,-2,z), texture=dirt_texture, block_id=3)
@@ -141,6 +159,9 @@ for z in range(20):
 for z in range(20):
     for x in range(20):
         Voxel(position=(x,-6,z), texture=stone_texture, block_id=1)
+for z in range(20):
+    for x in range(20):
+        Voxel(position=(x,-7,z), texture=bedrock_texture, block_id=5)
 
 
 # --- Input ---
